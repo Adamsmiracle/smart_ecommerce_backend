@@ -1,0 +1,22 @@
+type Product {
+  id: ID!
+  name: String!
+  sku: String
+  price: Float
+}
+
+input ProductInput {
+  name: String!
+  sku: String
+  price: Float
+}
+
+type Query {
+  products(limit: Int, offset: Int): [Product]
+  product(id: ID!): Product
+}
+
+type Mutation {
+  createProduct(input: ProductInput!): Product
+}
+
