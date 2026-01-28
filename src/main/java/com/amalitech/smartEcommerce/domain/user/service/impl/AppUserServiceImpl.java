@@ -3,6 +3,8 @@ package com.amalitech.smartEcommerce.domain.user.service.impl;
 import com.amalitech.smartEcommerce.domain.user.entity.AppUser;
 import com.amalitech.smartEcommerce.domain.user.repository.AppUserRepository;
 import com.amalitech.smartEcommerce.domain.user.service.AppUserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,8 +30,8 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public List<AppUser> list(int limit, int offset) {
-        return repository.findAll();
+    public Page<AppUser> listPaged(int page, int size) {
+        return repository.findAll(PageRequest.of(page, size));
     }
 }
 

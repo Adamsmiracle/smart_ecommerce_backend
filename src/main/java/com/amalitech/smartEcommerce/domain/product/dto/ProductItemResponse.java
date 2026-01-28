@@ -14,24 +14,12 @@ import java.util.UUID;
 @Data
 public class ProductItemResponse {
     private UUID id;
+    private String name;
     private String sku;
     private String image;
     private String price;
     private Integer qtyInStock;
 
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
 
-    public String getSku() { return sku; }
-    public void setSku(String sku) { this.sku = sku; }
-
-    public String getImage() { return image; }
-    public void setImage(String image) { this.image = image; }
-
-    public String getPrice() { return price; }
-    public void setPrice(String price) { this.price = price; }
-
-    public Integer getQtyInStock() { return qtyInStock; }
-    public void setQtyInStock(Integer qtyInStock) { this.qtyInStock = qtyInStock; }
 }
 

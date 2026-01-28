@@ -4,6 +4,8 @@ import com.amalitech.smartEcommerce.domain.product.entity.ProductItem;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,9 +14,18 @@ import java.util.UUID;
 @Repository
 public interface ProductItemRepository extends JpaRepository<ProductItem, UUID> {
 
-    Page<ProductItem> findAll(Pageable page);
+//    Page<ProductItem> findAll(Pageable page);
 
-//    Page<ProductItem> findBY
+    @Query("""
+    SELECT pi
+    FROM ProductItem pi
+    JOIN pi.product p
+    WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))
+""")
+    Page<ProductItem> findByNameContainingIgnoreCase(
+            @Param("name") String name,
+            Pageable pageable
+    );
 
     Page<ProductItem> findByProduct_Id(UUID productId, Pageable pageable);
 

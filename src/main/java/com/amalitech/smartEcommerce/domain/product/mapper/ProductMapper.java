@@ -8,7 +8,6 @@ import com.amalitech.smartEcommerce.domain.product.entity.Product;
 import com.amalitech.smartEcommerce.domain.product.entity.ProductItem;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ProductMapper {
 
@@ -19,6 +18,13 @@ public class ProductMapper {
         r.setName(p.getName());
         r.setDescription(p.getDescription());
         r.setProductImage(p.getProductImage());
+        if (p.getCategory() != null) {
+            r.setCategoryName(p.getCategory().getName());
+        }
+
+
+        r.setPrice(p.getItems().getFirst().getPrice().toString());
+
         return r;
     }
 
@@ -41,10 +47,11 @@ public class ProductMapper {
         d.setDescription(p.getDescription());
         d.setProductImage(p.getProductImage());
         if (p.getCategory() != null) {
-            d.setCategoryId(p.getCategory().getId());
             d.setCategoryName(p.getCategory().getName());
         }
-        d.setItems(items == null ? null : items.stream().map(ProductMapper::toItemResponse).collect(Collectors.toList()));
+        java.util.Optional<java.math.BigDecimal> minPrice2 = (items == null) ? java.util.Optional.empty()
+                : items.stream().map(ProductItem::getPrice).filter(java.util.Objects::nonNull).min(java.math.BigDecimal::compareTo);
+        minPrice2.ifPresent(mp -> d.setPrice(mp.toPlainString()));
         return d;
     }
 

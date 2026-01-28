@@ -1,12 +1,19 @@
 package com.amalitech.smartEcommerce.domain.user.controller;
 
+import com.amalitech.smartEcommerce.common.dto.PageResponse;
 import com.amalitech.smartEcommerce.common.response.ApiResponse;
+import com.amalitech.smartEcommerce.domain.user.dto.CreateUserRequest;
+import com.amalitech.smartEcommerce.domain.user.dto.UserResponse;
 import com.amalitech.smartEcommerce.domain.user.entity.AppUser;
+import com.amalitech.smartEcommerce.domain.user.mappers.UserMapper;
 import com.amalitech.smartEcommerce.domain.user.service.AppUserService;
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -19,20 +26,27 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<AppUser>> create(@RequestBody AppUser u) {
-        AppUser created = userService.create(u);
-        return ResponseEntity.ok(ApiResponse.success("Created", created));
+    @Operation(summary = "Create user")
+    public ResponseEntity<ApiResponse<UserResponse>> create(@RequestBody CreateUserRequest u) {
+        AppUser createdUser = userService.create(UserMapper.toUserEntity(u));
+        UserResponse response = UserMapper.toUserResponse(createdUser);
+        return ResponseEntity.ok(ApiResponse.success("Created", response));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<AppUser>> getById(@PathVariable("id") java.util.UUID id) {
-        AppUser u = userService.getById(id);
-        return ResponseEntity.ok(ApiResponse.success(u));
+    @Operation(summary = "Get user by id")
+    public ResponseEntity<ApiResponse<UserResponse>> getById(@PathVariable("id") UUID id) {
+        UserResponse userResponse = UserMapper.toUserResponse(userService.getById(id));
+        return ResponseEntity.ok(ApiResponse.success(userResponse));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<AppUser>>> list(@RequestParam(defaultValue = "10") int limit,
-                                                            @RequestParam(defaultValue = "0") int offset) {
-        return ResponseEntity.ok(ApiResponse.success(userService.list(limit, offset)));
+    @Operation(summary = "List users (paged)")
+    public ResponseEntity<ApiResponse<PageResponse<UserResponse>>> list(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<AppUser> userPage = userService.listPaged(page, size);
+        PageResponse<UserResponse> response = PageResponse.from(userPage, UserMapper::toUserResponse);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 }

@@ -53,11 +53,23 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     @Operation(summary = "Get product by id (detail)")
     public ResponseEntity<ApiResponse<ProductResponse>> getById(@PathVariable UUID id) {
         ProductResponse p = service.getProductDetail(id);
         return ResponseEntity.ok(ApiResponse.success(p));
+    }
+
+    @GetMapping("/{name}")
+    @Operation(summary = "search for product using name")
+    public ResponseEntity<ApiResponse<PageResponse<ProductResponse>>> getByName(
+            @PathVariable String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+    Page<Product> productPage = service.searchProductByName(name, page, size );
+    PageResponse<ProductResponse> response = PageResponse.from(productPage, ProductMapper::toProductResponse);
+    return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @PostMapping

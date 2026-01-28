@@ -21,7 +21,6 @@ import lombok.experimental.SuperBuilder;
 })
 public class AppUser extends BaseEntity {
 
-
     @NotBlank(message = "Email address is required")
     @Email(message = "Email should be valid")
     @Size(max = 100, message = "Email cannot exceed 100 characters")
@@ -46,6 +45,7 @@ public class AppUser extends BaseEntity {
     @Pattern(regexp = "^[+]?[0-9\\s\\-\\(\\)]*$",
             message = "Phone number can only contain digits, spaces, hyphens, parentheses, and plus sign")
     @Column(name = "phone_number", length = 20)
+    @NotNull(message = "Phone number is needed")
     private String phoneNumber;
 
     @NotBlank(message = "Password is required")
