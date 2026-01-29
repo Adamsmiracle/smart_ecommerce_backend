@@ -9,11 +9,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import lombok.Builder;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "customer_order", indexes = {
@@ -72,4 +70,5 @@ public class CustomerOrder extends BaseEntity {
         line.setOrder(null);
         this.orderLines.remove(line);
     }
+
 }

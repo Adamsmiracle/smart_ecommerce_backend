@@ -10,5 +10,6 @@ public interface AppUserService {
     AppUser create(AppUser user);
     AppUser getById(UUID id);
     Page<AppUser> listPaged(int page, int size);
+    void delete(UUID id);
 }
 

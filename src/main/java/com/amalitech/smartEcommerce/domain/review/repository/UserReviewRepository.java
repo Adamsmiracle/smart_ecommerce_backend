@@ -16,4 +16,7 @@ public interface UserReviewRepository extends JpaRepository<UserReview, UUID> {
     Page<UserReview> findByUser(AppUser user, Pageable pageable);
 
     List<UserReview> findByOrderedProduct(OrderLine orderLine);
+
+    // Find reviews for all order lines that reference product items belonging to a given product
+    Page<UserReview> findDistinctByOrderedProduct_ProductItem_Product_Id(UUID productId, Pageable pageable);
 }

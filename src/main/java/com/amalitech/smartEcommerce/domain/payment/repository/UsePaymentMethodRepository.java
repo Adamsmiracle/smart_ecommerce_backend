@@ -12,4 +12,6 @@ public interface UsePaymentMethodRepository extends JpaRepository<UsePaymentMeth
     List<UsePaymentMethod> findByUser(AppUser user);
 
     Optional<UsePaymentMethod> findByUserAndIsDefaultTrue(AppUser user);
+
+    void deleteByUser(AppUser user);
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
 
 // explicit import to avoid compile ordering issues
@@ -27,6 +28,25 @@ public class GlobalExceptionHandler {
         String forwarded = request.getHeader("X-Forwarded-For");
         if (forwarded != null && !forwarded.isBlank()) return forwarded.split(",")[0].trim();
         return request.getRemoteAddr();
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiResponse<ApiError>> handleConstraintViolation(ConstraintViolationException ex, HttpServletRequest req) {
+        String path = req.getRequestURI();
+        String cid = getCorrelationId();
+        String clientIp = getClientIp(req);
+        String details = ex.getConstraintViolations().stream()
+                .map(v -> (v.getPropertyPath() == null ? "" : v.getPropertyPath().toString()) + (v.getMessage() == null ? "" : ": " + v.getMessage()))
+                .collect(Collectors.joining("; "));
+        ApiError err = new ApiError(ErrorCode.VALIDATION_FAILED, "Validation Failed", details, path, cid, clientIp);
+        log.info("Constraint violation {}: {} - cid={}", path, details, cid);
+        ApiResponse<ApiError> body = ApiResponse.<ApiError>builder()
+                .status(false)
+                .message("Validation Failed")
+                .data(err)
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
     private String getCorrelationId() {

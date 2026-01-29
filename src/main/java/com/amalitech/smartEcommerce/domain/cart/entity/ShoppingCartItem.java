@@ -32,7 +32,7 @@ public class ShoppingCartItem extends BaseEntity {
     @JoinColumn(name = "product_item_id", nullable = false)
     private ProductItem productItem;
 
-    @Size(min = 1, message = "Quantity must be one or more")
+    @Min(value = 1, message = "Quantity must be one or more")
     @Column(name = "quantity")
     private Integer quantity;
 

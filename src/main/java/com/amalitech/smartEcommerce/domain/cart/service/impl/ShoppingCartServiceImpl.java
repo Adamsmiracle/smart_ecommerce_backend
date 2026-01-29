@@ -31,5 +31,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public List<ShoppingCart> list(int limit, int offset) {
         return repository.findAll();
     }
+
+    @Override
+    public ShoppingCart update(ShoppingCart cart) {
+        return repository.save(cart);
+    }
 }
 

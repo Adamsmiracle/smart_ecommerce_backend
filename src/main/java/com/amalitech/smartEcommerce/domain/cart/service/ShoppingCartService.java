@@ -9,5 +9,6 @@ public interface ShoppingCartService {
     ShoppingCart create(ShoppingCart cart);
     ShoppingCart getById(UUID id);
     List<ShoppingCart> list(int limit, int offset);
+    ShoppingCart update(ShoppingCart cart);
 }
 

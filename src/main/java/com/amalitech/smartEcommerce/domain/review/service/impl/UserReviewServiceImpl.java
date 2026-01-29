@@ -3,6 +3,8 @@ package com.amalitech.smartEcommerce.domain.review.service.impl;
 import com.amalitech.smartEcommerce.domain.review.entity.UserReview;
 import com.amalitech.smartEcommerce.domain.review.repository.UserReviewRepository;
 import com.amalitech.smartEcommerce.domain.review.service.UserReviewService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +32,11 @@ public class UserReviewServiceImpl implements UserReviewService {
     @Override
     public List<UserReview> list(int limit, int offset) {
         return repository.findAll();
+    }
+
+    @Override
+    public Page<UserReview> findByProductId(UUID productId, int page, int size) {
+        return repository.findDistinctByOrderedProduct_ProductItem_Product_Id(productId, PageRequest.of(page, size));
     }
 }
 
